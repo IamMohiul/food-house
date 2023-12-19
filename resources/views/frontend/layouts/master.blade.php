@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Food-House || Home Food in Restaurant</title>
     <link rel="icon" type="image/png" href="{{ asset('frontend/images/favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/all.min.css') }}">
@@ -17,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/jquery.exzoom.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/toastr.min.css') }}">
 
+
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
     <!-- <link rel="stylesheet" href="css/rtl.css"> -->
@@ -26,17 +28,17 @@
     <!--=============================
         Nav Start
     ==============================-->
-        @include('frontend.layouts.nav')
-        <!--=============================
+    @include('frontend.layouts.nav')
+    <!--=============================
         Nav End
     ==============================-->
 
-        @yield('content')
+    @yield('content')
 
     <!--=============================
         FOOTER START
     ==============================-->
-        @include('frontend.layouts.footer')
+    @include('frontend.layouts.footer')
     <!--=============================
         FOOTER END
     ==============================-->
@@ -89,10 +91,17 @@
                 toastr.options.progressBar = true;
                 toastr.error('{{ $error }}')
             @endforeach
-
         @endif
+
+        // Add CSRF at Ajax Header
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
     </script>
 
+    @stack('scripts')
 </body>
 
 </html>

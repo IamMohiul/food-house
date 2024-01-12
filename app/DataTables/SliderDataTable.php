@@ -22,7 +22,23 @@ class SliderDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'slider.action')
+            ->addColumn('action', function($query){
+                $edit = "<a href='".route('admin.slider.edit', $query->id)."' class='btn btn-primary'><i class='far fa-edit'></i></a>";
+                $delete = "<a href='".route('admin.slider.destroy', $query->id)."' class='btn btn-danger delete-item ml-2'><i class='fas fa-trash'></i></a>";
+
+                return $edit.$delete;
+            })
+            ->addColumn('image', function($query){
+                return '<img src="'.asset($query->image).'" height="100px">';
+            })
+            ->addColumn('status', function($query){
+                if($query->status ===1 ){
+                    return  "<span class='badge badge-success'>Active</span>";
+                }else{
+                    return  "<span class='badge badge-danger'>Inactive</span>";
+                }
+            })
+            ->rawColumns(['action','image','status'])
             ->setRowId('id');
     }
 
@@ -44,7 +60,7 @@ class SliderDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     //->dom('Bfrtip')
-                    ->orderBy(1)
+                    ->orderBy(0)
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('excel'),
@@ -64,16 +80,12 @@ class SliderDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('image'),
-            Column::make('offer'),
             Column::make('title'),
-            Column::make('sub_title'),
-            Column::make('short_description'),
-            Column::make('button_link'),
             Column::make('status'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
-                  ->width(60)
+                  ->width(100)
                   ->addClass('text-center'),
         ];
     }

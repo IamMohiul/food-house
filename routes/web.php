@@ -19,7 +19,11 @@ use Doctrine\DBAL\Schema\Index;
 |
 */
 
+/** SHow Home Page */
 Route::get('/',[FrontendController::class, 'index'])->name('home');
+
+/** SHow Product Details Page */
+Route::get('product/{slug}', [FrontendController::class,'productShow'])->name('product.show');
 
 
 /** Admin Auth Routes */
